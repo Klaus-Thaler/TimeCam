@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">TimeCam</string>
+    <string name="akku">AKKU</string>
+    <string name="klick">KLICK</string>
+    <string name="_0">0</string>
+    <string name="close">close</string>
+    <string name="placeholder">placeholder</string>
+    <string name="value">value</string>
+    <string name="hour">hour</string>
+    <string name="minute">minute</string>
+    <string name="ubit">unit</string>
+    <string name="unit">unit</string>
+    <string name="notification_timer_start_loop">Timer is running.</string>
+    <string name="notification_timer_description">Loops begins at</string>
+    <string name="notification_start_loops">start loops</string>
+    <string name="make_pictures">make pictures</string>
+    <string name="x">X</string>
+    <string name="loop_time">Loop Time</string>
+    <string name="start_time">Start Time</string>
+    <string name="configuration">Configuration</string>
+    <string name="dialog_description">Description</string>
+</resources>
