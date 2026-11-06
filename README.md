@@ -10,9 +10,3 @@ The display is configured without a navigation bar. All key information is shown
 
 <img width="400" height="800"  alt="adbScreenShot20261106_050653" src="https://github.com/user-attachments/assets/66919d49-37f7-4934-a573-d29c8ca55ac4" />
 <img width="400" height="800"  alt="adbScreenShot20261106_050647" src="https://github.com/user-attachments/assets/51d6dfa7-443a-4992-9387-fd3497f80780" />
-
-
-
-
-<img width="400" height="800" alt="adbScreenShot105445" src="https://github.com/user-attachments/assets/09ee0a2c-108e-4329-87c2-fc045724cb80" />
-<img width="400" height="800" alt="adbScreenShot105411" src="https://github.com/user-attachments/assets/8d0c0071-1aca-4404-91fa-6558ad947e3a" />
