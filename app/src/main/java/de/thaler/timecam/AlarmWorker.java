@@ -37,8 +37,6 @@ public class AlarmWorker extends Worker {
     public Result doWork() {
         // Code, der nach ungefähr 9 Stunden ausgeführt wird
         Log.v(TAG, "Worker doWork");
-        Logger.add("Worker doWork");
-
         if (CameraMain.cameraProviderFuture.isCancelled()) CameraMain.startCamera();
         //NotificationManagerCompat.from(getApplicationContext()).cancelAll();
 

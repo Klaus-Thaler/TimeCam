@@ -18,12 +18,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -76,9 +79,10 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA
     };
+    BatteryManager akkuManager;
     boolean needsRequestPermission = false;
 
-    @SuppressLint({"SetTextI18n", "SdCardPath"})
+    @SuppressLint({"SetTextI18n", "SdCardPath", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +115,18 @@ public class MainActivity extends AppCompatActivity {
             Logger.create();
         }
 
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
+            @SuppressLint("BatteryLife")
+            Intent intent = new Intent(
+                    Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                    Uri.parse("package:" + getPackageName())
+            );
+            startActivity(intent);
+        }
+
+        akkuManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+
         Logger.create();
         Logger.add("\n --- start ---");
         Log.i(TAG, "SDK " + Build.VERSION.SDK_INT + " Android " + Build.VERSION.RELEASE);
@@ -139,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
         startInTime = mPreferenz.getLong("startInTime", 0L); // def 1h
         long loopTime = mPreferenz.getLong("loopTime", 60 * 1000L); // alle minute ein bild
+        int jpgQuality = mPreferenz.getInt("JpegQuality",90); // default compression
 
         // anzeige im display
         // android version
@@ -160,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
         // akku stand im Display anzeigen
         TextView textViewAKKU = findViewById(R.id.textViewAKKU);
         Handler akkuHandler = new Handler();
-        BatteryManager akkuManager = (BatteryManager) this.getSystemService(BATTERY_SERVICE);
         int delayAkku = 10 * 60 * 1000; //milliseconds
         final Runnable runnableAkku = new Runnable(){
             public void run(){
@@ -183,8 +199,9 @@ public class MainActivity extends AppCompatActivity {
                 readableMilliSeconds(mPreferenz.getLong("startInTime",0L))));
 
         // loop zeit anzeigen
-        textViewLoopTime = findViewById(R.id.loop_time);
-        textViewLoopTime.setText(String.format("loop alle %s sekunden", (loopTime /1000)));
+        textViewLoopTime = findViewById(R.id.loop);
+        textViewLoopTime.setText(String.format("Loop %s sec - JPEG %s%%",
+                loopTime /1000, jpgQuality));
 
         // buttons
         // exit button
@@ -239,9 +256,17 @@ public class MainActivity extends AppCompatActivity {
                                     + startTimeFormat(System.currentTimeMillis() +
                                     mPreferenz.getLong("startInTime",0L)),
                             android.R.drawable.ic_lock_idle_alarm, null);
-                    Logger.add(String.format("start alarm. loop begin at %s",
+                    // erste zeile im log
+                    Logger.add(String.format("\tStart alarm.\n" +
+                                    "\tAkku: %s %%.\n" +
+                                    "\tLoop begin at %s.\n" +
+                                    "\tLoopTime is %s Seconds.\n" +
+                                    "\tJPEG Quality is %s%%.",
+                            akkuManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY),
                             startTimeFormat(System.currentTimeMillis() +
-                                    mPreferenz.getLong("startInTime",0L))));
+                                    mPreferenz.getLong("startInTime",0L)),
+                            mPreferenz.getLong("loopTime",0L)/1000,
+                            mPreferenz.getInt("JpegQuality", 90)));
                     CustomToast.showToast(getApplicationContext(), "start alarm", 1);
                 } else {
                     buttonStart.setText("Start");

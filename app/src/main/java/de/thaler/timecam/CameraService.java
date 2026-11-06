@@ -86,7 +86,6 @@ public class CameraService extends Service {
         running = true;
         long loopTime = mainActivity.mPreferenz.getLong("loopTime", 60 * 1000L);
         Log.v(TAG, "in loop - value: " + loopTime + " millisec");
-        Logger.add("in loop - value: " + loopTime + " millisec");
         //Log.i(TAG, String.format("running: %s photoIsSave: %s", running, photoIsSave));
 
         Log.i(TAG, "service on start -> " + CameraMain.cameraProviderFuture.isCancelled());

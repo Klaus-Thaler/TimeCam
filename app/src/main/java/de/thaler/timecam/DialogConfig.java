@@ -103,18 +103,23 @@ public class DialogConfig extends Dialog {
             @Override
             public void onClick(View v) {
                 // save loopValue and show in display
+                int quality = spinner_quality.getSelectedItemPosition() * 10 + 20;
+                Log.v(TAG, "quality " + quality);
+                mainActivity.mPreferenzEditor.putInt("JpegQuality", quality).apply();
+                Logger.add(String.format("JpegQuality: %s %%", quality));
+
                 if (spinner_unit.getSelectedItemPosition() == 0) { // in sekunden
                     mainActivity.mPreferenzEditor.putLong("loopTime",
                             spinner_value.getSelectedItemPosition() * 1000L).apply();
-                    mainActivity.textViewLoopTime.setText(String.format("Loop: %s seconds.",
-                            spinner_value.getSelectedItemPosition()));
+                    mainActivity.textViewLoopTime.setText(String.format("Loop %s sec - JPEG %s%%",
+                            spinner_value.getSelectedItemPosition(), quality));
                     Logger.add(String.format("Loop: %s seconds.",
                             spinner_value.getSelectedItemPosition()));
                 } else { // dann sind es minuten
                     mainActivity.mPreferenzEditor.putLong("loopTime",
                             spinner_value.getSelectedItemPosition() * 60000L).apply();
-                    mainActivity.textViewLoopTime.setText(String.format("Loop: %s minutes.",
-                            spinner_value.getSelectedItemPosition()));
+                    mainActivity.textViewLoopTime.setText(String.format("Loop %s min - JPEG %s%%",
+                            spinner_value.getSelectedItemPosition(), quality));
                     Logger.add(String.format("Loop: %s minutes.",
                             spinner_value.getSelectedItemPosition()));
                 }
@@ -130,10 +135,7 @@ public class DialogConfig extends Dialog {
                         mainActivity.startTimeFormat(System.currentTimeMillis() +
                                 mainActivity.mPreferenz.getLong("startInTime",5*1000L))));
 
-                int quality = spinner_quality.getSelectedItemPosition() * 10 + 20;
-                Log.v(TAG, "quality " + quality);
-                mainActivity.mPreferenzEditor.putInt("JpegQuality", quality).apply();
-
+                // restart camera with new parameters
                 CameraMain.startCamera();
 
                 // close windows
